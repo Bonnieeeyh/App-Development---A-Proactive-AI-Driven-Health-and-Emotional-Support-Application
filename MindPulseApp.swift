@@ -3,10 +3,10 @@ import SwiftUI
 
 @main
 struct MindPulseApp: App {
-    @State private var generateNormalRangeMessage: Bool = true // Add state to track preference
+    @State private var generateNormalRangeMessage: Bool = true 
 
     init() {
-        loadGenerateNormalRangeMessagePreference() // Load preference on app launch
+        loadGenerateNormalRangeMessagePreference() 
         registerBackgroundTasks()
         scheduleAppRefresh()
     }
@@ -24,22 +24,19 @@ struct MindPulseApp: App {
     }
 
     private func handleAppRefresh(task: BGAppRefreshTask) {
-        scheduleAppRefresh() // Reschedule the next background task.
+        scheduleAppRefresh() 
 
         let healthKitManager = HealthKitManager()
 
-        // Expiration handler
         task.expirationHandler = {
             print("Background task expired.")
-            task.setTaskCompleted(success: false) // Mark the task as failed if it expires.
+            task.setTaskCompleted(success: false) 
         }
 
         healthKitManager.fetchAndAnalyzeData { response in
             if let heartRate = healthKitManager.heartRate,
                let respiratoryRate = healthKitManager.respiratoryRate,
                let userAge = UserDefaults.standard.integer(forKey: "userAge") as Int? {
-
-                // Check notification eligibility
                 let shouldNotify = !self.isHealthDataInNormalRange(age: userAge, heartRate: heartRate, respiratoryRate: respiratoryRate) || self.generateNormalRangeMessage
 
                 if shouldNotify, let responseText = response {
